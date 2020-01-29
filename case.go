@@ -15,6 +15,7 @@ type Pipeline struct {
 	Cache     bool           `json:"cache"`
 	CacheAs   string         `json:"cache_as"`
 	OnFailure enum.OnFailure `json:"on_failure"`
+	Delay     string         `json:"delay"`
 }
 
 //TestCase struct

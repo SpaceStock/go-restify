@@ -101,8 +101,8 @@ func (s *scenario) Run(w io.Writer) []restify.TestResult {
 loop:
 	for i, tc := range s.cases {
 		io.WriteString(w, fmt.Sprintf(
-			"%d. Test case: name=%s desc=%s onfail=%s\r\n",
-			(i+1), tc.Name, tc.Description, tc.Pipeline.OnFailure))
+			"%d. Test case: name=%s desc=%s onfail=%s delay=%s\r\n",
+			(i+1), tc.Name, tc.Description, tc.Pipeline.OnFailure, tc.Pipeline.Delay))
 
 		tr := restify.NewTestResult(s, i)
 
@@ -271,6 +271,9 @@ loop:
 		tr.Success = true
 		tr.Message = msg
 		testResults = append(testResults, tr)
+
+		delay, _ := time.ParseDuration(tc.Pipeline.Delay)
+		time.Sleep(delay)
 	}
 
 	return testResults

@@ -143,6 +143,7 @@ func Test_Scenario2(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc1",
 				OnFailure: onfailure.Exit,
+				Delay: "3s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -158,13 +159,14 @@ func Test_Scenario2(t *testing.T) {
 				StatusCode: 200,
 				Evaluate: []restify.Expression{
 					"userId && userId === 1",
-					"id && id === 2",	//	False
+					"id && id === 2",
 				},
 			},
 			Pipeline: restify.Pipeline{
 				Cache:     true,
 				CacheAs:   "tc2",
 				OnFailure: onfailure.Exit,
+				Delay: "2s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -185,8 +187,9 @@ func Test_Scenario2(t *testing.T) {
 			},
 			Pipeline: restify.Pipeline{
 				Cache:     true,
-				CacheAs:   "tc1",
+				CacheAs:   "tc3",
 				OnFailure: onfailure.Exit,
+				Delay: "1s",
 			},
 		}).End().
 		Run(os.Stdout)
@@ -221,6 +224,7 @@ func Test_Scenario3(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc1",
 				OnFailure: onfailure.Exit,
+				Delay: "3s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -243,6 +247,7 @@ func Test_Scenario3(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc2",
 				OnFailure: onfailure.Exit,
+				Delay: "3s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -265,6 +270,7 @@ func Test_Scenario3(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc3",
 				OnFailure: onfailure.Exit,
+				Delay: "3s",
 			},
 		}).End().
 		Run(os.Stdout)
@@ -299,6 +305,7 @@ func Test_Scenario4(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc1",
 				OnFailure: onfailure.Exit,
+				Delay: "3s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -321,6 +328,7 @@ func Test_Scenario4(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc2",
 				OnFailure: onfailure.Fallthrough,
+				Delay: "3s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -343,6 +351,7 @@ func Test_Scenario4(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc3",
 				OnFailure: onfailure.Exit,
+				Delay: "3s",
 			},
 		}).End().
 		Run(os.Stdout)
