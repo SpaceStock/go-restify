@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptrace"
+	"strings"
 	"time"
 
 	restify "github.com/SpaceStock/go-restify"
@@ -272,8 +273,11 @@ loop:
 		tr.Message = msg
 		testResults = append(testResults, tr)
 
-		delay, _ := time.ParseDuration(tc.Pipeline.Delay)
-		time.Sleep(delay)
+		tc.Pipeline.Delay = restify.Delay(strings.TrimSpace(string(tc.Pipeline.Delay)))
+		if !tc.Pipeline.Delay.IsZero() {
+			delay, _ := time.ParseDuration(string(tc.Pipeline.Delay))
+			time.Sleep(delay)
+		}
 	}
 
 	return testResults

@@ -3,6 +3,7 @@ package restify
 import (
 	"os"
 	"testing"
+	"time"
 
 	restify "github.com/SpaceStock/go-restify"
 	"github.com/SpaceStock/go-restify/enum/onfailure"
@@ -143,7 +144,6 @@ func Test_Scenario2(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc1",
 				OnFailure: onfailure.Exit,
-				Delay: "3s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -159,14 +159,13 @@ func Test_Scenario2(t *testing.T) {
 				StatusCode: 200,
 				Evaluate: []restify.Expression{
 					"userId && userId === 1",
-					"id && id === 2",
+					"id && id === 2", 
 				},
 			},
 			Pipeline: restify.Pipeline{
 				Cache:     true,
 				CacheAs:   "tc2",
 				OnFailure: onfailure.Exit,
-				Delay: "2s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -189,7 +188,6 @@ func Test_Scenario2(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc3",
 				OnFailure: onfailure.Exit,
-				Delay: "1s",
 			},
 		}).End().
 		Run(os.Stdout)
@@ -224,7 +222,6 @@ func Test_Scenario3(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc1",
 				OnFailure: onfailure.Exit,
-				Delay: "3s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -240,14 +237,13 @@ func Test_Scenario3(t *testing.T) {
 				StatusCode: 200,
 				Evaluate: []restify.Expression{
 					"userId && userId === 1",
-					"id && id === 3",	//	False
+					"id && id === 3", //	False
 				},
 			},
 			Pipeline: restify.Pipeline{
 				Cache:     true,
 				CacheAs:   "tc2",
 				OnFailure: onfailure.Exit,
-				Delay: "3s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -270,7 +266,6 @@ func Test_Scenario3(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc3",
 				OnFailure: onfailure.Exit,
-				Delay: "3s",
 			},
 		}).End().
 		Run(os.Stdout)
@@ -305,7 +300,6 @@ func Test_Scenario4(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc1",
 				OnFailure: onfailure.Exit,
-				Delay: "3s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -321,14 +315,13 @@ func Test_Scenario4(t *testing.T) {
 				StatusCode: 200,
 				Evaluate: []restify.Expression{
 					"userId && userId === 1",
-					"id && id === 1",	//	False
+					"id && id === 1", //	False
 				},
 			},
 			Pipeline: restify.Pipeline{
 				Cache:     true,
 				CacheAs:   "tc2",
 				OnFailure: onfailure.Fallthrough,
-				Delay: "3s",
 			},
 		}).
 		AddCase(restify.TestCase{
@@ -351,14 +344,49 @@ func Test_Scenario4(t *testing.T) {
 				Cache:     true,
 				CacheAs:   "tc3",
 				OnFailure: onfailure.Exit,
-				Delay: "3s",
 			},
 		}).End().
 		Run(os.Stdout)
 
 	assert.Equal(t, 3, len(results), "Test Case = 3")
-	
+
 	assert.True(t, results[0].Success)
 	assert.False(t, results[1].Success)
 	assert.True(t, results[2].Success)
+}
+
+//	Time Delay
+func Test_Scenario5(t *testing.T) {
+	before := time.Now()
+	results := scenario.New().
+		Set().ID("").Name("Scenario 5").
+		AddCase(restify.TestCase{
+			Order:       1,
+			Name:        "Test Case 1",
+			Description: "",
+			Request: restify.Request{
+				URL:     "http://jsonplaceholder.typicode.com/posts/1",
+				Method:  "GET",
+				Payload: nil,
+			},
+			Expect: restify.Expect{
+				StatusCode: 200,
+				Evaluate: []restify.Expression{
+					"userId && userId === 1",
+					"id && id === 1",
+				},
+			},
+			Pipeline: restify.Pipeline{
+				Cache:     true,
+				CacheAs:   "tc1",
+				OnFailure: onfailure.Exit,
+				Delay:     restify.Delay("3s"),
+			},
+		}).End().
+		Run(os.Stdout)
+	after := time.Since(before).Seconds() // .Second -> float64
+	
+	assert.GreaterOrEqual(t, after, 3.0)
+	assert.NotEqual(t, 0, len(results), "Seharusnya bukan 0")
+	assert.True(t, results[0].Success)
 }
