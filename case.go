@@ -2,6 +2,8 @@ package restify
 
 import (
 	"regexp"
+	"strings"
+	"time"
 
 	"github.com/SpaceStock/go-restify/enum"
 )
@@ -10,11 +12,30 @@ var (
 	replacable = regexp.MustCompile("\\{(.*?)\\}")
 )
 
+// Delay type string
+type Delay string
+
+// IsZero ?
+func (d Delay) IsZero() bool {
+	delay := string(d)
+	if delay == "0" || delay == "0s" || strings.HasPrefix("-", delay) {
+		return true
+	}
+
+	_, err := time.ParseDuration(delay)
+	if err != nil {
+		return true
+	}
+
+	return false
+}
+
 //Pipeline test pipeline as what to do with the response object
 type Pipeline struct {
 	Cache     bool           `json:"cache"`
 	CacheAs   string         `json:"cache_as"`
 	OnFailure enum.OnFailure `json:"on_failure"`
+	Delay     Delay          `json:"delay"`
 }
 
 //TestCase struct
