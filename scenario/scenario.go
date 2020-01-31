@@ -280,7 +280,5 @@ loop:
 		}
 	}
 
-	sr := restify.ScenarioResult(testResults)
-
-	return sr //  scenario result
+	return restify.ScenarioResult(testResults)
 }
