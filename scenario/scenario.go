@@ -281,7 +281,6 @@ loop:
 	}
 
 	sr := restify.ScenarioResult(testResults)
-	sr.IsFailed()
 
 	return sr //  scenario result
 }
