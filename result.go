@@ -41,13 +41,14 @@ func NewTestResult(scn Scenario, tcn int) TestResult {
 	}
 }
 
-//ScenarioResult is
+//ScenarioResult is array of TestResult struct
 type ScenarioResult []TestResult
 
-//IsFailed is
+//IsFailed given boolean whether it's true or false
+//Return true if success attribute equal false
 func (sr *ScenarioResult) IsFailed() bool {
 	for _, tc := range *sr {
-		if tc.Success == false {
+		if !tc.Success {
 			return true
 		}
 	}
