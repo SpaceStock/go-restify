@@ -397,7 +397,7 @@ func Test_Scenario5(t *testing.T) {
 				StatusCode: 200,
 				Evaluate: []restify.Expression{
 					"userId && userId === 1",
-					"id && id === 1", //	False
+					"id && id === 2", //	False
 				},
 			},
 			Pipeline: restify.Pipeline{
@@ -411,5 +411,6 @@ func Test_Scenario5(t *testing.T) {
 
 	assert.GreaterOrEqual(t, after, 3.0)
 	assert.NotEqual(t, 0, len(results), "Seharusnya bukan 0")
-	assert.True(t, results[0].Success)
+	assert.True(t, results[1].Success)
+	assert.False(t, results.IsFailed())
 }
