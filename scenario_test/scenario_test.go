@@ -159,7 +159,7 @@ func Test_Scenario2(t *testing.T) {
 				StatusCode: 200,
 				Evaluate: []restify.Expression{
 					"userId && userId === 1",
-					"id && id === 2", 
+					"id && id === 2",
 				},
 			},
 			Pipeline: restify.Pipeline{
@@ -345,7 +345,8 @@ func Test_Scenario4(t *testing.T) {
 				CacheAs:   "tc3",
 				OnFailure: onfailure.Exit,
 			},
-		}).End().
+		}).
+		End().
 		Run(os.Stdout)
 
 	assert.Equal(t, 3, len(results), "Test Case = 3")
@@ -382,10 +383,32 @@ func Test_Scenario5(t *testing.T) {
 				OnFailure: onfailure.Exit,
 				Delay:     restify.Delay("3s"),
 			},
+		}).
+		AddCase(restify.TestCase{
+			Order:       2,
+			Name:        "Test Case 2",
+			Description: "",
+			Request: restify.Request{
+				URL:     "http://jsonplaceholder.typicode.com/posts/2",
+				Method:  "GET",
+				Payload: nil,
+			},
+			Expect: restify.Expect{
+				StatusCode: 200,
+				Evaluate: []restify.Expression{
+					"userId && userId === 1",
+					"id && id === 1", //	False
+				},
+			},
+			Pipeline: restify.Pipeline{
+				Cache:     true,
+				CacheAs:   "tc2",
+				OnFailure: onfailure.Exit,
+			},
 		}).End().
 		Run(os.Stdout)
 	after := time.Since(before).Seconds() // .Second -> float64
-	
+
 	assert.GreaterOrEqual(t, after, 3.0)
 	assert.NotEqual(t, 0, len(results), "Seharusnya bukan 0")
 	assert.True(t, results[0].Success)
