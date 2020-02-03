@@ -15,7 +15,8 @@ var (
 // Delay type string
 type Delay string
 
-// IsZero ?
+//IsZero given boolean whether it's true or false
+//Return false if delay not equal 0 or 0s or preceded by "-" or delay is error when parsing to time duration
 func (d Delay) IsZero() bool {
 	delay := string(d)
 	if delay == "0" || delay == "0s" || strings.HasPrefix("-", delay) {

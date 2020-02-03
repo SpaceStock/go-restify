@@ -91,7 +91,7 @@ func (s *scenario) UnmarshalJSON(data []byte) error {
 }
 
 //TODO: UGLY AF CODE! TOO EFFIN FAT! NEED TO REFACTOR!
-func (s *scenario) Run(w io.Writer) []restify.TestResult {
+func (s *scenario) Run(w io.Writer) restify.ScenarioResult {
 	io.WriteString(w, fmt.Sprintf(
 		"Start running test scenario: name=%s, env=%s, desc=%s, cases=%d\r\n",
 		s.name, s.environment, s.description, len(s.cases)))
@@ -280,5 +280,5 @@ loop:
 		}
 	}
 
-	return testResults
+	return restify.ScenarioResult(testResults)
 }

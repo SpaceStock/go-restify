@@ -40,3 +40,18 @@ func NewTestResult(scn Scenario, tcn int) TestResult {
 		ExpectedCode:  tc.Expect.StatusCode,
 	}
 }
+
+//ScenarioResult is array of TestResult struct
+type ScenarioResult []TestResult
+
+//IsFailed given boolean whether it's true or false
+//Return true if success attribute equal false
+func (sr *ScenarioResult) IsFailed() bool {
+	for _, tc := range *sr {
+		if !tc.Success {
+			return true
+		}
+	}
+
+	return false
+}
