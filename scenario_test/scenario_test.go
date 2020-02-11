@@ -392,3 +392,77 @@ func Test_Scenario5(t *testing.T) {
 	assert.True(t, results[0].Success)
 	assert.False(t, results.IsFailed())
 }
+
+//	assess cache - memastikan cache 1 bernilai benar di chache 2
+func Test_Scenario6(t *testing.T) {
+	results := scenario.New().
+		Set().ID("").Name("Scenario 6").
+		AddCase(restify.TestCase{
+			Order:       1,
+			Name:        "Test Case 1",
+			Description: "",
+			Request: restify.Request{
+				URL:     "http://jsonplaceholder.typicode.com/posts/1",
+				Method:  "GET",
+				Payload: nil,
+			},
+			Expect: restify.Expect{
+				StatusCode: 200,
+				Evaluate: []restify.Expression{
+					"userId && userId === 1",
+				},
+			},
+			Pipeline: restify.Pipeline{
+				Cache:     true,
+				CacheAs:   "result_one",
+				OnFailure: onfailure.Exit,
+			},
+		}).
+		AddCase(restify.TestCase{
+			Order:       2,
+			Name:        "Test Case 2",
+			Description: "",
+			Request: restify.Request{
+				URL:     "http://jsonplaceholder.typicode.com/posts/1",
+				Method:  "GET",
+				Payload: nil,
+			},
+			Expect: restify.Expect{
+				StatusCode: 200,
+				Evaluate: []restify.Expression{
+					"id && id === result_one.id",
+				},
+			},
+			Pipeline: restify.Pipeline{
+				Cache:     true,
+				CacheAs:   "result_two",
+				OnFailure: onfailure.Exit,
+			},
+		}).
+		AddCase(restify.TestCase{
+			Order:       3,
+			Name:        "Test Case 3",
+			Description: "",
+			Request: restify.Request{
+				URL:     "http://jsonplaceholder.typicode.com/posts/2",
+				Method:  "GET",
+				Payload: nil,
+			},
+			Expect: restify.Expect{
+				StatusCode: 200,
+				Evaluate: []restify.Expression{
+					"id && id === result_one.id",
+				},
+			},
+			Pipeline: restify.Pipeline{
+				Cache:     true,
+				CacheAs:   "result_three",
+				OnFailure: onfailure.Exit,
+			},
+		}).End().
+		Run(os.Stdout)
+
+	assert.True(t, results[0].Success)
+	assert.True(t, results[1].Success)
+	assert.False(t, results[2].Success)
+}
