@@ -231,13 +231,12 @@ loop:
 			continue
 		}
 
-		// TODO: Evaluate every rule
+		// Evaluate every rule
 		var pair map[string]interface{}
-		var cache map[string]interface{}
-
 		json.Unmarshal(body, &pair) //	convert []byte to map[string]interface{}
 
 		for k, v := range s.cache { //	add all cache to pair
+			var cache map[string]interface{}
 			json.Unmarshal(v, &cache)
 			pair[k] = cache
 		}
