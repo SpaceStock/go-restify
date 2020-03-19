@@ -35,6 +35,11 @@ func TestExpression_IsTrue(t *testing.T) {
 		args: args{json: `{"person": {"name": "John", "age": 10} }`},
 		expr: Expression(`person.name === "John" && person.age >= 10`),
 		want: true,
+	}, {
+		name: "Complex object positive case 4",
+		args: args{json: `{"person": {"name": {"is": "John" } } }`},
+		expr: Expression(`person.name.is === "John"`),
+		want: true,
 	}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
