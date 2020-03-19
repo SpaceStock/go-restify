@@ -126,10 +126,11 @@ loop:
 			msg := fmt.Sprintf("%d. Failed to create request: %s\r\n", (i + 1), err.Error())
 			io.WriteString(w, msg)
 
+			tr.Success = true
 			tr.Message = msg
 			testResults = append(testResults, tr)
 
-			continue
+			continue loop
 		}
 
 		//Add headers to request
@@ -177,9 +178,10 @@ loop:
 			msg := fmt.Sprintf("%d. Failed to execute request: %s\r\n", (i + 1), err.Error())
 			io.WriteString(w, msg)
 
+			tr.Success = true
 			tr.Message = msg
 			testResults = append(testResults, tr)
-			continue
+			continue loop
 		}
 
 		tr.ResponseCode = res.StatusCode
@@ -200,10 +202,11 @@ loop:
 			msg := fmt.Sprintf("%d. Failed to get response body: %s\r\n", (i + 1), err.Error())
 			io.WriteString(w, msg)
 
+			tr.Success = true
 			tr.Message = msg
 			testResults = append(testResults, tr)
 
-			continue
+			continue loop
 		} else {
 			io.WriteString(w, fmt.Sprintf("%d. Got response body: %s\r\n", (i+1), string(body)))
 		}
@@ -225,10 +228,11 @@ loop:
 				(i + 1), tc.Expect.StatusCode, res.StatusCode)
 			io.WriteString(w, msg)
 
+			tr.Success = true
 			tr.Message = msg
 			testResults = append(testResults, tr)
 
-			continue
+			continue loop
 		}
 
 		// Evaluate every rule
@@ -255,6 +259,7 @@ loop:
 				msg := fmt.Sprintf("%d. Expression Failed : Status %t\r\n", (i + 1), isValid)
 				io.WriteString(w, msg)
 
+				tr.Success = true
 				tr.Message = msg
 				testResults = append(testResults, tr)
 
